@@ -1,0 +1,11 @@
+'''
+Author: Scott Field
+Date: 09/01/2025
+Purpose:
+Using PySimpleGui provide the ui to request Movie/TV Show data from IMDB and
+to display the response of the request.
+'''
+#define scraper
+
+if __name__ == "__main__":
+    pass
