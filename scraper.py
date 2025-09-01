@@ -15,4 +15,15 @@ options.binary_location = "/usr/bin/brave-browser"
 
 #Use Chrome Driver For Brave Browser
 driver = webdriver.Chrome(options=options)
-search = driver.findElement(By.ID,"suggestion-search")
+#Get Website
+driver.get("https://www.imdb.com/")
+driver.implicitly_wait(0.5)
+#Get Elements From Website
+searchText = driver.findElement(By.ID,"suggestion-search")
+searchSubmit = driver.findElement(By.ID,"suggestion-search-button")
+
+#Submit Search
+
+#Grab List of Titles (If Any)
+
+#Output Titles To UI
