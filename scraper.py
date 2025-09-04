@@ -9,6 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
+
 #Get Brave Browser Location
 options = Options()
 options.binary_location = "/usr/bin/brave-browser"
@@ -18,12 +19,53 @@ driver = webdriver.Chrome(options=options)
 #Get Website
 driver.get("https://www.imdb.com/")
 driver.implicitly_wait(0.5)
-#Get Elements From Website
-searchText = driver.findElement(By.ID,"suggestion-search")
-searchSubmit = driver.findElement(By.ID,"suggestion-search-button")
+
+#Get Search Elements From Website
+searchText = driver.find_element(
+    By.ID,"suggestion-search"
+)
+searchSubmitBtn = driver.find_element(
+    By.ID,"suggestion-search-button"
+)
 
 #Submit Search
+name = input("Please Enter a Title To Search For\n:")
+searchText.send_keys(name)
+searchSubmitBtn.click()
 
-#Grab List of Titles (If Any)
+#Find Box
+resultsBox = driver.find_element(
+    By.CSS_SELECTOR, "section[data-testid='find-results-section-title']"
+)
+#Grab List of Titles From Box
+titlesList = resultsBox.find_element(
+    By.CSS_SELECTOR,"ul[role='presentation']"
+)
+#Grab Text from titlesList
+titles = titlesList.find_elements(
+    By.TAG_NAME,"li"
+)
+#Grab Links from titlesList
+links = titlesList.find_elements(
+    By.TAG_NAME,"a"
+)
+#The number of Links is the number of titles
+numTitles = len(links)
 
-#Output Titles To UI
+inner = 0
+for index in range(1,numTitles+1,1):
+    print(f"{index:}\
+    \tTITLE  :\t{titles[inner].text}\
+    \tRELEASE:\t{titles[inner+1].text}\
+    \tCREATOR:\t{titles[inner+2].text}\
+    ")
+    inner+=3
+
+#User Enters Selected Title Index
+selection = input("Please Enter The Series Index\n:")
+#Page Then Changes To That Selection
+links[int(selection)].click()
+
+input("Select Any Key to Exit")
+#Close
+driver.quit()
