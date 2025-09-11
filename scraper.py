@@ -5,10 +5,10 @@ Purpose:
 Using selenium scrape data from a given movie/tv show title
 then output that data to the user
 '''
+from series import Series
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-
 
 #Get Brave Browser Location
 options = Options()
@@ -41,9 +41,9 @@ resultsBox = driver.find_element(
 titlesList = resultsBox.find_element(
     By.CSS_SELECTOR,"ul[role='presentation']"
 )
-#Grab Text from titlesList
+#Grab & Order Elements From List Of Titles (only grabbing direct children)
 titles = titlesList.find_elements(
-    By.TAG_NAME,"li"
+    By.XPATH,"./li"
 )
 #Grab Links from titlesList
 links = titlesList.find_elements(
@@ -53,13 +53,11 @@ links = titlesList.find_elements(
 numTitles = len(links)
 
 inner = 0
-for index in range(1,numTitles+1,1):
-    print(f"{index:}\
-    \tTITLE  :\t{titles[inner].text}\
-    \tRELEASE:\t{titles[inner+1].text}\
-    \tCREATOR:\t{titles[inner+2].text}\
-    ")
-    inner+=3
+for index in range(0,numTitles,1):
+    show = Series()
+    show.title = titles[index].text
+    print(f"{index}:{show.title}")
+
 
 #User Enters Selected Title Index
 selection = input("Please Enter The Series Index\n:")
