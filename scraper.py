@@ -9,6 +9,13 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
+#Function to print show data
+def printShow(show):
+    print(f"{index}:\n{'='*50}")
+    for key,value in show.items():
+        print(f"\t{key}\t:\t{value}")
+    print(f"{'='*50}")
+
 #Get Brave Browser Location
 options = Options()
 options.binary_location = "/usr/bin/brave-browser"
@@ -71,6 +78,7 @@ for index in range(0,numTitles,1):
             #if first row
             case 0:
                 match len(liList):
+                    #still need to handle case where type is not present
                     case 1:
                         show["title"] = responseText
                         show["type"]    = liList[0].text
@@ -98,16 +106,32 @@ for index in range(0,numTitles,1):
     #add all shows to the list
     showList.append(show)
     #print show data
-    print(f"{index}:\n{'='*50}")
-    for key,value in show.items():
-        print(f"\t{key}\t:\t{value}")
-    print(f"{'='*50}")
+    printShow(show)
 
 
 #User Enters Selected Title Index
-selection = input("Please Enter The Series Index\n:")
+selection = int(input("Please Enter The Series Index\n:"))
+show = showList[selection]
 #Page Then Changes To That Selection
-links[int(selection)].click()
+links[selection].click()
+
+#Get Tags From Selected Show (Contained within a tags within the div of class ipc-chip-list__scroller)
+tagList = []
+tagBox = driver.find_element(By.CSS_SELECTOR,"div[class='ipc-chip-list__scroller']")
+tagLinks = tagBox.find_elements(By.XPATH,"./a")
+numTags = len(tagLinks)
+#Add tags to show
+for index in range(0,numTags,1):
+    tagText = tagLinks[index].text
+    tagList.append(tagText)
+show["tags"] = tagList
+
+#Add description to show
+parBox = driver.find_element(By.CSS_SELECTOR,"p[data-testid='plot']")
+desc = parBox.find_element(By.XPATH,"./span").text
+show["description"] = desc
+
+printShow(show)
 
 input("Select Any Key to Exit")
 #Close
