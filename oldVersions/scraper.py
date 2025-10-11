@@ -81,7 +81,7 @@ for index in range(0,numTitles,1):
                     #still need to handle case where type is not present
                     case 1:
                         show["title"] = responseText
-                        show["type"]    = liList[0].text
+                        show["type"]    = liList[0].text == None ? "future" : liList[0].text
                         counter+=1 #nothing in second row
                     case 2:
                         show["date"]    = liList[0].text
