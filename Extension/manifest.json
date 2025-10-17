@@ -14,7 +14,13 @@
       "sidePanel"
   ],
   "side_panel" : {
-    "default_path" : "ui.html"
+    "default_path" : "View/ui.html"
+  },
+  "content_scripts": [
+  {
+    "matches": ["<all_urls>"],
+    "js": ["Content/listen.js"]
   }
+]
 
 }

@@ -2,8 +2,9 @@
 Author: Scott Field
 Date: 10/17/2025
 Purpose:
-From A Selected HTML Element Generate the XPath SiteScraper Can Use to Find it.
+listen for user input and receive data from the browser pages DOM.
 */
+//Functions
 function getXPath(element) {
 
   // Get the tag name of the current element in lowercase for XPath
@@ -40,5 +41,16 @@ function getXPath(element) {
   const parentPath = parent ? getXPath(parent) : '';
 
   // Return path to selected element
-  return "${parentPath}/${tagName}[${index}]";
+  return `${parentPath}/${tagName}${index}`;;
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('click', function(event) {
+    const clickedElement = event.target;
+    //Send Info To User Interface
+    chrome.runtime.sendMessage({ type: 'elementClicked', path: getXPath(clickedElement) }, function(response) {
+      console.log('Sent Message, received response:', response ? response : null);
+    });
+  });
+});
