@@ -1,26 +1,24 @@
-
 {
   "name": "SiteScraperConfig",
   "description": "Generates A Config File For SiteScraper Python Script",
   "version": "1.0",
   "manifest_version": 3,
-  "action": {
-    "default_icon": "icon.png"
-  },
-  "background": {
-    "service_worker": "Service/background.js"
-  },
+  "action": { "default_icon": "icon.png" },
+  "background": { "service_worker": "Service/background.js" },
   "permissions": [
-      "sidePanel"
+    "scripting",
+    "tabs",
+    "sidePanel"
   ],
-  "side_panel" : {
-    "default_path" : "View/ui.html"
-  },
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "side_panel": { "default_path": "View/ui.html" },
   "content_scripts": [
-  {
-    "matches": ["<all_urls>"],
-    "js": ["Content/listen.js"]
-  }
-]
-
+    {
+      "matches": ["<all_urls>"],
+      "js": ["Content/select.js"],
+      "run_at": "document_idle"
+    }
+  ]
 }
