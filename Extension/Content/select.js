@@ -4,30 +4,23 @@ Date: 10/17/2025
 Purpose:
 listen for user input and receive data from the browser pages DOM.
 */
-//Global Variables
+// Global Variables
+// Global Variables
 let isSelecting = false;
 let previousElement = null;
 
-//Functions
+// Compute XPath of element
 function getXPath(element) {
-
-  // Get the tag name of the current element in lowercase for XPath
   const tagName = element.tagName.toLowerCase();
-  // Get parent node to recursively build XPath upward
   const parent = element.parentNode;
 
-  // Base case: if element is the body, return absolute path to body
   if (element === document.body) {
     return '/html/body';
   }
 
-  // Helper function to find the element's index among siblings with the same tag name
   const idx = (sib, name) => {
-    // XPath starts counting at 1
     let count = 1;
-    // Iterate over previous siblings to count how many of the same tag precede this node
     for (let sibling = sib.previousSibling; sibling; sibling = sibling.previousSibling) {
-      // nodeType 1 means ELEMENT_NODE
       if (sibling.nodeType === 1 && sibling.tagName === name) {
         count++;
       }
@@ -35,19 +28,17 @@ function getXPath(element) {
     return count;
   };
 
-  // Determine this element's position (index) among siblings with the same tag
   let index = '';
   if (parent) {
     index = `[${idx(element, tagName)}]`;
   }
 
-  // Recursively generate XPath for the parent
   const parentPath = parent ? getXPath(parent) : '';
 
-  // Return path to selected element
-  return `${parentPath}/${tagName}${index}`;;
+  return `${parentPath}/${tagName}${index}`;
 }
 
+// Clear previously highlighted element
 function clearHighlight() {
   if (previousElement) {
     previousElement.style.outline = '';
@@ -56,6 +47,7 @@ function clearHighlight() {
   }
 }
 
+// Highlight element on mouseover
 function onMouseOver(event) {
   if (!isSelecting) return;
 
@@ -69,6 +61,7 @@ function onMouseOver(event) {
   previousElement.style.cursor = 'pointer';
 }
 
+// On element click send XPath message
 function onClick(event) {
   if (!isSelecting) return;
 
@@ -76,40 +69,45 @@ function onClick(event) {
   event.stopPropagation();
 
   clearHighlight();
-  stopSelection();
 
   const clickedElement = event.target;
+  const xPath = getXPath(clickedElement);
 
-  chrome.runtime.sendMessage({ type: 'elementClicked', path: getXPath(clickedElement) });
+  chrome.runtime.sendMessage({ type: 'elementClicked', path: xPath });
 
-  console.log('Selected element XPath:', xpath);
+  console.log('Selected element XPath:', xPath);
 }
 
+// Start selection mode
 function startSelection() {
   if (isSelecting) return;
   isSelecting = true;
+  console.log('Selection mode started');
   document.addEventListener('mouseover', onMouseOver);
   document.addEventListener('click', onClick, true);
-  console.log('Selection mode started');
 }
 
+// Stop selection mode
 function stopSelection() {
   if (!isSelecting) return;
   isSelecting = false;
+  console.log('Selection mode stopped');
   document.removeEventListener('mouseover', onMouseOver);
   document.removeEventListener('click', onClick, true);
   clearHighlight();
-  console.log('Selection mode stopped');
 }
 
-//Event Listener to Stop / Start Selection
+// Listen for messages to start/stop selection
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('Content script received message:', request);
   if (request.type === 'startSelection') {
+    console.log('Starting selection mode');
     startSelection();
     sendResponse({ status: 'started' });
   } else if (request.type === 'stopSelection') {
+    console.log('Stopping selection mode');
     stopSelection();
     sendResponse({ status: 'stopped' });
   }
-  return true; // to keep message channel open if needed
+  return true;
 });

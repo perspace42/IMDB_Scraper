@@ -1,24 +1,19 @@
 {
-  "name": "SiteScraperConfig",
+  "name": "ElementFinder",
   "description": "Generates A Config File For SiteScraper Python Script",
   "version": "1.0",
   "manifest_version": 3,
-  "action": { "default_icon": "icon.png" },
+  "action": {
+    "default_icon": "icon.png",
+    "default_title": "ElementFinder"
+  },
   "background": { "service_worker": "Service/background.js" },
   "permissions": [
     "scripting",
     "tabs",
-    "sidePanel"
+    "webNavigation"
   ],
   "host_permissions": [
     "<all_urls>"
-  ],
-  "side_panel": { "default_path": "View/ui.html" },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["Content/select.js"],
-      "run_at": "document_idle"
-    }
   ]
 }
