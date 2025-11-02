@@ -5,9 +5,11 @@ Purpose: Dynamically Fill The UI with data received from back end, turns back en
 on/off
 */
 
-//Code That Depends On Dom Elements
-// Global variables
+/* Global variables */
+
 let started = false;
+
+/* Functions */
 
 //Function to get the last focused tab that is NOT in an extension window
 function getLastFocusedNonExtensionTab(callback) {
@@ -46,6 +48,8 @@ function getLastFocusedNonExtensionTab(callback) {
     });
   });
 }
+
+/*DOM Element Dependent Code*/
 
 document.addEventListener('DOMContentLoaded', () => {
   const stateBtn = document.getElementById('stateBtn');
@@ -93,12 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
       );
     });
   });
-
+  /*
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log('Message received:', request, 'from:', sender);
     if (request.type === 'elementClicked') {
-      const container = document.getElementById('table');
-      if (container) {
+      const form = document.getElementById('elementList');
+      if (form) {
         const entry = document.createElement('div');
         entry.textContent = `Type: ${request.type}, Path: ${request.path}`;
         container.appendChild(entry);
@@ -107,4 +111,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     return false;
   });
+  */
+  chrome.runtime.onMessage.addListener((request, sender) => {
+    console.log('Message received:', request, 'from:', sender);
+    if (request.type === 'elementClicked') {
+      const form = document.getElementById('elementList');
+      if (form) {
+        const entry = document.createElement('div');
+        entry.textContent = `Type: ${request.type}, Path: ${request.path}`;
+        form.appendChild(entry);
+      }
+    }
+  });
+
+/*End of DOM Element Dependent Code*/
 });
