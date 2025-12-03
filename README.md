@@ -1,2 +1,2 @@
-# IMDB_Scraper
-Pull Movie/TV titles and detail data from imdb.com using Selenium and PySimpleGUI
+# Site_Scraper
+Allow user to pull text & image data from a given web page and then send that data to either a file or stream for writing.
